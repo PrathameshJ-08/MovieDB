@@ -1,47 +1,62 @@
 import React, { useContext, useState } from "react";
-import paginationArrow from "../utils/pagination-arrow.svg";
+import paginationArrow from "../utils/Images/pagination-arrow.svg";
 import { MovieContext } from "../context/MovieContext";
 
 const Pagination = () => {
-  const { page, setPage, totalPages, movieData } = useContext(MovieContext);
+  const {
+    page,
+    setPage,
+    totalPages,
+    searchPage,
+    setSearchPage,
+    searchTotalPages,
+    isSearchMode,
+    searchData,
+    movieData,
+  } = useContext(MovieContext);
   const [inputPage, setInputPage] = useState("");
 
-  const TotalNumber = totalPages;
+  const currentPage = isSearchMode ? searchPage : page;
+  const currentTotalPages = isSearchMode ? searchTotalPages : totalPages;
+  const setCurrentPage = isSearchMode ? setSearchPage : setPage;
 
   const next = () => {
-    if (page < TotalNumber) {
-      setPage(page + 1);
+    if (currentPage < currentTotalPages) {
+      setCurrentPage(currentPage + 1);
     } else {
-      setPage(1);
+      setCurrentPage(1);
     }
   };
 
   const prev = () => {
-    if (page > 1) {
-      setPage(page - 1);
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     } else {
-      setPage(TotalNumber);
+      setCurrentPage(currentTotalPages);
     }
   };
 
   const multiStepNext = () => {
-    setPage(Math.min(page + 3, TotalNumber));
+    setCurrentPage(Math.min(currentPage + 3, currentTotalPages));
   };
 
   const multiStepPrev = () => {
-    setPage(Math.max(page - 3, 1));
+    setCurrentPage(Math.max(currentPage - 3, 1));
   };
 
   const handleJumpToPage = (e) => {
     e.preventDefault();
     const pageNumber = parseInt(inputPage, 10);
-    if (pageNumber >= 1 && pageNumber <= TotalNumber) {
-      setPage(pageNumber);
+    if (pageNumber >= 1 && pageNumber <= currentTotalPages) {
+      setCurrentPage(pageNumber);
     }
     setInputPage("");
   };
 
-  if (movieData && movieData.results && movieData.results.length > 0) {
+  if (
+    (isSearchMode && searchData && searchData.results.length > 0) ||
+    (!isSearchMode && movieData && movieData.results.length > 0)
+  ) {
     return (
       <div className="flex flex-col items-center justify-center mt-4 text-white font-bold">
         <ul className="flex items-center text-sm mb-2">
@@ -57,7 +72,7 @@ const Pagination = () => {
               />
             </button>
           </li>
-          {page > 3 && (
+          {currentPage > 3 && (
             <li>
               <button
                 onClick={multiStepPrev}
@@ -67,13 +82,13 @@ const Pagination = () => {
               </button>
             </li>
           )}
-          {page > 1 && (
+          {currentPage > 1 && (
             <li>
               <button
                 onClick={prev}
                 className="outline-0 hover:text-yellow-100 rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 mx-1.5"
               >
-                {page - 1}
+                {currentPage - 1}
               </button>
             </li>
           )}
@@ -82,20 +97,20 @@ const Pagination = () => {
               disabled
               className="outline-0 rounded-full w-8 h-8 flex items-center justify-center bg-yellow-200 text-gray-300 mx-1.5"
             >
-              {page}
+              {currentPage}
             </button>
           </li>
-          {page < TotalNumber && (
+          {currentPage < currentTotalPages && (
             <li>
               <button
                 onClick={next}
                 className="outline-0 hover:text-yellow-100 rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 mx-1.5"
               >
-                {page + 1}
+                {currentPage + 1}
               </button>
             </li>
           )}
-          {page < TotalNumber - 2 && (
+          {currentPage < currentTotalPages - 2 && (
             <li>
               <button
                 onClick={multiStepNext}
@@ -105,23 +120,24 @@ const Pagination = () => {
               </button>
             </li>
           )}
-          {(page === TotalNumber || page === TotalNumber - 1) && (
+          {(currentPage === currentTotalPages ||
+            currentPage === currentTotalPages - 1) && (
             <li>
               <button
-                onClick={() => setPage(1)}
+                onClick={() => setCurrentPage(1)}
                 className="outline-0 hover:text-yellow-100 rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 mx-1.5"
               >
                 1
               </button>
             </li>
           )}
-          {page < TotalNumber && (
+          {currentPage < currentTotalPages && (
             <li>
               <button
-                onClick={() => setPage(TotalNumber)}
+                onClick={() => setCurrentPage(currentTotalPages)}
                 className="outline-0 hover:text-yellow-100 rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 mx-1.5"
               >
-                {TotalNumber}
+                {currentTotalPages}
               </button>
             </li>
           )}
@@ -146,7 +162,7 @@ const Pagination = () => {
             className="text-yellow-200 rounded w-16 h-8 text-center bg-gray-200 outline-0 border border-transparent focus:border-yellow-200"
             placeholder="Page"
             min="1"
-            max={TotalNumber}
+            max={currentTotalPages}
           />
           <button
             type="submit"

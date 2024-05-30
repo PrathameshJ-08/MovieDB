@@ -1,34 +1,83 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
-import searchIcon from "../utils/search-icon.svg";
-import { debounce } from "lodash";
+import React, {
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
+import searchIcon from "../utils/Images/search-icon.svg";
+import CloseIcon from "../utils/Images/close-icon.svg";
 import { MovieContext } from "../context/MovieContext";
 import { MOVIE_POSTER_IMG } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
+import { debounce } from "lodash";
 
-const SearchInput = ({ debounceFunc }) => {
+const SearchInput = () => {
   const [search, setSearch] = useState("");
-  const { searchData, setSearchData } = useContext(MovieContext);
+  const {
+    searchData,
+    setSearchData,
+    getSearchData,
+    setIsSearchMode,
+    setListType,
+    setPage,
+    setSearchPage,
+    isSearchActive,
+    setIsSearchActive,
+  } = useContext(MovieContext);
   const navigate = useNavigate();
   const [showResults, setShowResults] = useState(false);
+
   const resultsRef = useRef(null);
 
+  const debouncedSearchSuggestions = useCallback(
+    debounce(async (input) => {
+      if (input) {
+        await getSearchData(input);
+        setShowResults(true);
+      }
+    }, 300),
+    []
+  );
+
   const handleSearch = (e) => {
-    e.preventDefault();
     let input = e.target.value;
     setSearch(input);
-    debounceFunc(input);
-    setShowResults(!!input);
+    setShowResults(false);
+    debouncedSearchSuggestions(input);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    handleSearch(search);
+    if (search) {
+      await getSearchData(search);
+      setShowResults(false);
+      setIsSearchMode(true);
+      setListType("search_results");
+      setIsSearchActive(true);
+      setPage(1);
+      navigate("/");
+      setSearchPage(1);
+    }
+  };
+
+  const handleReset = () => {
+    setSearchData(null);
+    setSearch("");
+    setShowResults(false);
+    setIsSearchMode(false);
+    setListType("now_playing");
+    setIsSearchActive(false);
+    setSearchPage(1);
+    setPage(1);
   };
 
   const selectMovie = (id) => {
     setSearchData(null);
     setSearch("");
     setShowResults(false);
+    setIsSearchMode(false);
+    setListType("now_playing");
     navigate(`/movie/${id}`);
   };
 
@@ -48,7 +97,7 @@ const SearchInput = ({ debounceFunc }) => {
   return (
     <>
       <form
-        className="w-96 relative flex items-center ml-7 "
+        className="w-96 relative flex items-center ml-7"
         onSubmit={handleSubmit}
       >
         <input
@@ -60,7 +109,11 @@ const SearchInput = ({ debounceFunc }) => {
           className="w-full rounded bg-gray-200 placeholder:text-gray-100 pl-2 required outline-0 border border-transparent focus:border-yellow-200"
         />
         <button type="submit" className="absolute right-1 cursor-pointer">
-          <img src={searchIcon} className="w-full h-auto" alt="search" />
+          {isSearchActive ? (
+            <img src={CloseIcon} onClick={handleReset} className="w-5 h-auto" />
+          ) : (
+            <img src={searchIcon} className="w-full h-auto" alt="search" />
+          )}
         </button>
       </form>
       {showResults && searchData && searchData.results && (
@@ -89,15 +142,9 @@ const SearchInput = ({ debounceFunc }) => {
 };
 
 const Search = () => {
-  const { getSearchData } = useContext(MovieContext);
-
-  const debounceFunc = debounce(function (val) {
-    getSearchData(val);
-  }, 2000);
-
   return (
     <div className="relative">
-      <SearchInput debounceFunc={debounceFunc} />
+      <SearchInput />
     </div>
   );
 };
