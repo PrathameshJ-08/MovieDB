@@ -36,20 +36,22 @@ const Home = () => {
                   alt={movie.title}
                   className="h-[40rem] w-full object-top object-cover"
                 />
-                <div className="absolute bottom-0 text-left w-full p-8 bg-gradient-to-t from-gray-300 to-transparent">
-                  <span className="text-white text-4xl font-bold mb-2">
-                    {movie.title}
-                  </span>
-                  <div className="text-white text-lg">
-                    {movie.release_date}
-                    <span className="ml-4">
-                      {movie.vote_average}
-                      <i className="fas fa-star text-yellow-200 ml-1" />
+                <div className="absolute bottom-0 text-left w-full bg-gradient-to-t from-gray-300 to-transparent">
+                  <div className="p-8">
+                    <span className="text-white text-4xl font-bold mb-2">
+                      {movie.title}
                     </span>
+                    <div className="text-white text-lg">
+                      {movie.release_date}
+                      <span className="ml-4">
+                        {movie.vote_average}
+                        <i className="fas fa-star text-yellow-200 ml-1" />
+                      </span>
+                    </div>
+                    <p className="text-white italic text-sm mb-4 w-5/12">
+                      {movie.overview}
+                    </p>
                   </div>
-                  <p className="text-white italic text-sm mb-4 w-5/12">
-                    {movie.overview}
-                  </p>
                 </div>
               </div>
             </Link>
