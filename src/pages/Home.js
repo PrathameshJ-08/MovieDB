@@ -10,6 +10,13 @@ import Pagination from "../components/Pagination";
 const Home = () => {
   const { movieData, listType } = useContext(MovieContext);
 
+  const formatListType = (str) => {
+    return str
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
   return (
     <main className="pb-5">
       <Carousel
@@ -50,7 +57,7 @@ const Home = () => {
       </Carousel>
 
       <span className="capitalize text-yellow-200 text-4xl font-bold mx-24">
-        {listType}
+        {formatListType(listType)}
       </span>
 
       <div className="px-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-items-center my-5">

@@ -25,28 +25,23 @@ const MovieDetails = () => {
   const getYear = (date) => {
     return date ? date.split("-")[0] : "";
   };
-  console.log(movieDetails);
+
   return (
-    <div className="mt-16">
+    <div className="mt-16 relative">
       {movieDetails?.backdrop_path ? (
-        <img
-          src={MOVIE_BACKDROP_IMG + movieDetails?.backdrop_path}
-          alt={movieDetails?.title}
-          className="h-[35rem] w-full object-top object-cover"
-        />
+        <div className="relative">
+          <img
+            src={MOVIE_BACKDROP_IMG + movieDetails?.backdrop_path}
+            alt={movieDetails?.title}
+            className="h-[35rem] w-full object-top object-cover"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-gray-300 to-transparent"></div>
+        </div>
       ) : (
         <NoImage />
       )}
 
-      <div
-        className={`absolute bottom-36 text-left w-full p-8 ${
-          movieDetails?.backdrop_path
-            ? "bg-gradient-to-t from-gray-300 to-transparent"
-            : ""
-        }`}
-      ></div>
-
-      <div className="flex p-6 bg-gray-900  rounded-t-xl">
+      <div className="flex p-6 bg-gray-300 relative z-10 rounded-t-xl">
         {movieDetails?.poster_path ? (
           <img
             src={MOVIE_POSTER_IMG + movieDetails?.poster_path}
@@ -60,8 +55,12 @@ const MovieDetails = () => {
         )}
 
         <div className="flex flex-col text-white">
-          <span className="text-4xl font-bold">{movieDetails?.title}</span>
-          <span className="text-2xl mb-2">{movieDetails?.tagline}</span>
+          <span className="text-4xl font-bold text-yellow-200">
+            {movieDetails?.title}
+          </span>
+          <span className="text-2xl mb-2 text-yellow-100">
+            {movieDetails?.tagline}
+          </span>
           <div className="flex items-center my-2">
             <span className="text-lg mr-4">
               {getYear(movieDetails?.release_date)}
@@ -80,7 +79,7 @@ const MovieDetails = () => {
             Rating: {movieDetails?.vote_average}
           </span>
 
-          <p className="my-4 text-lg w-5/12 border-b-4 pb-2">
+          <p className="my-4 text-lg w-8/12 border-b-4 border-yellow-200 pb-2">
             {movieDetails?.overview}
           </p>
 
@@ -104,15 +103,15 @@ const MovieDetails = () => {
             href={movieDetails?.homepage}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline mt-4  mb-4"
+            className="underline mt-4 mb-4 text-yellow-200"
           >
             Official Website
           </a>
-          <div className="flex my-1 bottom-0">
+          <div className="flex flex-wrap my-1">
             {movieDetails?.genres.map((genre) => (
               <span
                 key={genre.id}
-                className="text-lg mr-2 border-2 border-gray-100 rounded-full  px-2"
+                className="text-lg mr-2 mb-2 border-2 border-gray-100 rounded-full px-3 py-1"
               >
                 {genre.name}
               </span>

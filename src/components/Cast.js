@@ -7,7 +7,9 @@ const Cast = () => {
 
   return (
     <div className="bg-gray-200 p-4">
-      <h2 className="text-white text-3xl font-bold mb-4 border-b-4">Cast</h2>
+      <h2 className="text-yellow-200 text-3xl font-bold mb-4 border-b-4">
+        Cast
+      </h2>
       <ul className="grid grid-cols-4 gap-8">
         {castDetails &&
           castDetails?.cast.map((actor) => (

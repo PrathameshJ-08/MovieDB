@@ -7,7 +7,7 @@ jspm_packages/
 
 # Parcel
 dist
-.cache
+.parcel-cache
 
 # Logs
 logs
@@ -16,8 +16,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# dotenv environment variables file
-.env
 
-# Yarn Integrity file
-.yarn-integrity
+.env
