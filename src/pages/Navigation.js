@@ -10,7 +10,7 @@ const Navigation = () => {
   const handleNavigation = (type) => {
     setListType(type);
     setIsSearchActive(false);
-    setIsSearchMode(false); // Reset search mode when navigating to a different category
+    setIsSearchMode(false);
   };
 
   return (
